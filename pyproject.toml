@@ -3,7 +3,7 @@ requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pangolin"
+name = "facit"
 dynamic = ["version"]
 description = ''
 readme = "README.md"
@@ -15,9 +15,7 @@ authors = [
   { name = "Camilla Wehlin" },
   { name = "Anton Wiberg" },
 ]
-maintainers = [
-  { name = "Olle Vidner", email = "olle@vidner.se" },
-]
+maintainers = [{ name = "Olle Vidner", email = "olle@vidner.se" }]
 dependencies = []
 
 [project.urls]
@@ -30,6 +28,4 @@ hook-dirs = "pangolin._pyinstaller_hooks:get_hook_dirs"
 source = "vcs"
 
 [tool.hatch.build]
-exclude = [
-  "conda-recipe",
-]
+exclude = ["conda-recipe"]
