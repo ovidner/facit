@@ -19,10 +19,10 @@ maintainers = [{ name = "Olle Vidner", email = "olle@vidner.se" }]
 dependencies = []
 
 [project.urls]
-Homepage = "https://github.com/ovidner/pangolin"
+Homepage = "https://github.com/ovidner/facit"
 
 [project.entry-points.pyinstaller40]
-hook-dirs = "pangolin._pyinstaller_hooks:get_hook_dirs"
+hook-dirs = "facit._pyinstaller_hooks:get_hook_dirs"
 
 [tool.hatch.version]
 source = "vcs"

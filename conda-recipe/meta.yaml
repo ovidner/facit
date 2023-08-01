@@ -4,7 +4,7 @@
 {% set version = environ.get("GIT_DESCRIBE_TAG", "v0.0.0").lstrip("v") %}
 
 package:
-  name: pangolin
+  name: facit
   version: "{{ version }}"
 
 about:
@@ -27,4 +27,4 @@ requirements:
 
 test:
   imports:
-    - pangolin
+    - facit
