@@ -28,4 +28,4 @@ hook-dirs = "facit._pyinstaller_hooks:get_hook_dirs"
 source = "vcs"
 
 [tool.hatch.build]
-exclude = ["conda-recipe"]
+exclude = [".github", "conda-recipe"]
