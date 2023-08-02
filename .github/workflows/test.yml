@@ -38,6 +38,6 @@ jobs:
     - name: Install Nox
       run: mamba install nox
     - name: Install test environments
-      run: nox --install-only
+      run: nox --install-only --verbose
     - name: Run tests
       run: nox --reuse-existing-virtualenvs --no-install
