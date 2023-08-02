@@ -28,8 +28,6 @@ def tests(session, openmdao):
         *pyproject_deps,
         # https://github.com/conda-forge/numpy-feedstock/issues/84
         "blas=*=openblas",
-        # FIXME: workaround till we replace pygmo with pymoo
-        "pygmo",
         f"openmdao={openmdao}",
     )
     session.install("-e", ".", "--no-deps")
