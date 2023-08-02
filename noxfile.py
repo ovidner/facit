@@ -10,11 +10,13 @@ OPENMDAO_VERSIONS = [
 ]
 
 
-@nox.session(venv_backend="conda")
-@nox.parametrize("python", PYTHON_VERSIONS)
+@nox.session(venv_backend="conda", python=PYTHON_VERSIONS)
 @nox.parametrize("openmdao", OPENMDAO_VERSIONS)
-def tests_conda(session, python, openmdao):
-    session.conda_install(f"python={python}", f"openmdao={openmdao}")
-    session.install(".", "--no-deps")
-    # FIXME: actually run tests
-    session.run("python", "-c", "import facit")
+def tests(session, openmdao):
+    # FIXME: Now we only use conda to install Python, and let pip do the
+    # rest. Should probably use conda for everything.
+    # FIXME: workaround till we replace pygmo with pymoo
+    session.conda_install("pygmo")
+    session.install(f"openmdao=={openmdao}")
+    session.install("-e", ".[test]")
+    session.run("pytest", *session.posargs)

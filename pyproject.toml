@@ -7,7 +7,7 @@ name = "facit"
 dynamic = ["version"]
 description = ''
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.9"
 license = "MIT"
 keywords = []
 authors = [
@@ -16,7 +16,19 @@ authors = [
   { name = "Anton Wiberg" },
 ]
 maintainers = [{ name = "Olle Vidner", email = "olle@vidner.se" }]
-dependencies = []
+dependencies = [
+  "jsonpickle",
+  "openmdao",
+  "numpy",
+  "pandas",
+  "pydantic",
+  # "pygmo",  # Invalid package on PyPI, needs to be conda-installed :(
+  "xarray",
+  "zarr",
+]
+
+[project.optional-dependencies]
+test = ["deepdiff", "hypothesis", "pytest"]
 
 [project.urls]
 Homepage = "https://github.com/ovidner/facit"
@@ -29,6 +41,10 @@ source = "vcs"
 
 [tool.hatch.build]
 exclude = [".github", "conda-recipe"]
+
+[tool.pytest.ini_options]
+addopts = "--doctest-modules"
+testpaths = ["tests", "src"]
 
 [tool.ruff.isort]
 known-first-party = ["facit"]
