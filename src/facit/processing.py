@@ -1,5 +1,4 @@
 import numpy as np
-import pygmo
 import xarray as xr
 
 from .constants import DESIGN_ID
@@ -207,6 +206,12 @@ def hv_ref_point(ds, offset_ratio=0.001):
 
 
 def hypervolume(ds, ref_point=None):
+    try:
+        import pygmo
+    except ImportError:
+        raise ImportError(
+            "The hypervolume metric requires the pygmo package to be installed"
+        )
     scaled_objectives = objective_space(ds, scale=True)
 
     hv = pygmo.hypervolume(scaled_objectives.to_array().T)
