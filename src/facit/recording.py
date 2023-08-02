@@ -3,6 +3,7 @@ import time
 import warnings
 from collections import OrderedDict
 from itertools import chain
+from typing import Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -35,11 +36,11 @@ def _gen_abs_names_to_params(
                 subsystem_path
             )
 
-        if hasattr(subsystem, "_scop_meta"):
+        if hasattr(subsystem, "_facit_meta"):
             # FIXME: this is pretty ugly
-            param = subsystem._scop_meta["inputs"].get(
+            param = subsystem._facit_meta["inputs"].get(
                 local_name, None
-            ) or subsystem._scop_meta["outputs"].get(local_name, None)
+            ) or subsystem._facit_meta["outputs"].get(local_name, None)
             yield (abs_name, param)
 
 

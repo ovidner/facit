@@ -1,7 +1,8 @@
 import numpy as np
 import openmdao.api as om
 import pandas as pd
-import scop
+
+import facit
 
 
 def test_recording_timestamps():
@@ -24,7 +25,7 @@ def test_recording_timestamps():
             ]
         )
     )
-    recorder = scop.DatasetRecorder()
+    recorder = facit.DatasetRecorder()
     driver.add_recorder(recorder)
     driver.recording_options["includes"] = ["*"]
 

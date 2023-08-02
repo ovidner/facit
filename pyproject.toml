@@ -29,3 +29,6 @@ source = "vcs"
 
 [tool.hatch.build]
 exclude = [".github", "conda-recipe"]
+
+[tool.ruff.isort]
+known-first-party = ["facit"]

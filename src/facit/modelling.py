@@ -119,10 +119,10 @@ class ParamSet(dict):
         self[param.name] = param
 
 
-def get_scop_meta(comp: Component):
-    if not hasattr(comp, "_scop_meta"):
-        comp._scop_meta = {"inputs": {}, "outputs": {}}
-    return comp._scop_meta
+def get_facit_meta(comp: Component):
+    if not hasattr(comp, "_facit_meta"):
+        comp._facit_meta = {"inputs": {}, "outputs": {}}
+    return comp._facit_meta
 
 
 def add_input_param(comp: Component, param: Param):
@@ -139,7 +139,7 @@ def add_input_param(comp: Component, param: Param):
             tags=param.tags,
         )
 
-    meta = get_scop_meta(comp)
+    meta = get_facit_meta(comp)
     meta["inputs"][param.name] = param
 
 
@@ -157,5 +157,5 @@ def add_output_param(comp: Component, param: Param):
             tags=param.tags,
         )
 
-    meta = get_scop_meta(comp)
+    meta = get_facit_meta(comp)
     meta["outputs"][param.name] = param

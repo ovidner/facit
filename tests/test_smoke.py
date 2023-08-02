@@ -6,8 +6,8 @@ import openmdao.api as om
 import pytest
 from xarray.testing import assert_equal
 
-import scop
-from scop import DESIGN_ID, DatasetRecorder, pareto_subset
+import facit
+from facit import DESIGN_ID, DatasetRecorder, pareto_subset
 
 
 def nans(shape):
@@ -130,7 +130,7 @@ def test_dump_load(tmp_path):
         )
     )
 
-    recorder = scop.DatasetRecorder()
+    recorder = facit.DatasetRecorder()
     driver.recording_options["includes"] = ["*"]
     driver.add_recorder(recorder)
 
@@ -143,13 +143,13 @@ def test_dump_load(tmp_path):
     ds = recorder.assemble_dataset(driver)
     ds_copy = ds.copy(deep=True)
 
-    path = tmp_path / "dump.scop"
+    path = tmp_path / "dump.facit"
 
-    scop.dump(ds, path)
+    facit.dump(ds, path)
 
     # Make sure we don't mutate the ds by dumping it
     assert_ds_equal(ds, ds_copy)
 
-    dumped_and_loaded_ds = scop.load(path)
+    dumped_and_loaded_ds = facit.load(path)
 
     assert_ds_equal(dumped_and_loaded_ds, ds)

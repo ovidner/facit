@@ -1,6 +1,7 @@
 import openmdao.api as om
 import pytest
-import scop
+
+import facit
 
 
 def mass_func(length, count):
@@ -12,25 +13,25 @@ def time_func(mass, count):
 
 
 def test_params_e2e(tmp_path):
-    params = scop.ParamSet(
+    params = facit.ParamSet(
         [
-            scop.Param(name="length", default=1.0, space=scop.RealSpace(), units="m"),
-            scop.Param(
+            facit.Param(name="length", default=1.0, space=facit.RealSpace(), units="m"),
+            facit.Param(
                 name="count",
                 default=1,
-                space=scop.IntegerSpace(),
+                space=facit.IntegerSpace(),
                 units=None,
                 discrete=True,
             ),
-            scop.Param(name="mass", default=0.0, space=scop.RealSpace(), units="kg"),
-            scop.Param(name="time", default=0.0, space=scop.RealSpace(), units="s"),
+            facit.Param(name="mass", default=0.0, space=facit.RealSpace(), units="kg"),
+            facit.Param(name="time", default=0.0, space=facit.RealSpace(), units="s"),
         ]
     )
 
-    mass = scop.func_comp(
+    mass = facit.func_comp(
         inputs=[params["length"], params["count"]], outputs=[params["mass"]]
     )(mass_func)
-    time = scop.func_comp(
+    time = facit.func_comp(
         inputs=[params["mass"], params["count"]], outputs=[params["time"]]
     )(time_func)
 
@@ -53,7 +54,7 @@ def test_params_e2e(tmp_path):
             ]
         )
     )
-    recorder = scop.DatasetRecorder()
+    recorder = facit.DatasetRecorder()
     driver.add_recorder(recorder)
     driver.recording_options["includes"] = ["*"]
 
@@ -73,9 +74,9 @@ def test_params_e2e(tmp_path):
     assert ds["time.time"].attrs["param"] is params["time"]
 
     # Do they survive being dumped and loaded?
-    dump_path = tmp_path / "params_e2e.scop"
-    scop.dump(ds, dump_path)
-    loaded_ds = scop.load(dump_path)
+    dump_path = tmp_path / "params_e2e.facit"
+    facit.dump(ds, dump_path)
+    loaded_ds = facit.load(dump_path)
 
     # We can't have the very same params in the loaded dataset, but they
     # should be equal
