@@ -1,4 +1,5 @@
 import nox
+import tomli
 
 nox.options.reuse_existing_virtualenvs = True
 
@@ -10,17 +11,26 @@ OPENMDAO_VERSIONS = [
 ]
 
 
+def gen_deps(path="pyproject.toml", extras=None):
+    with open(path, "rb") as f:
+        pyproject = tomli.load(f)
+
+    yield from pyproject["project"]["dependencies"]
+    for extra in extras:
+        yield from pyproject["project"]["optional-dependencies"][extra]
+
+
 @nox.session(venv_backend="mamba", python=PYTHON_VERSIONS)
 @nox.parametrize("openmdao", OPENMDAO_VERSIONS)
 def tests(session, openmdao):
-    # FIXME: Now we only use conda to install Python, and let pip do the
-    # rest. Should probably use conda for everything.
+    pyproject_deps = set(gen_deps("pyproject.toml", extras=["test"]))
     session.conda_install(
+        *pyproject_deps,
         # https://github.com/conda-forge/numpy-feedstock/issues/84
         "blas=*=openblas",
         # FIXME: workaround till we replace pygmo with pymoo
         "pygmo",
+        f"openmdao={openmdao}",
     )
-    session.install(f"openmdao=={openmdao}")
-    session.install("-e", ".[test]")
+    session.install("-e", ".", "--no-deps")
     session.run("pytest", *session.posargs)
