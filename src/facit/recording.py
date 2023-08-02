@@ -20,12 +20,12 @@ from .modelling import Param
 
 SEMVAR_PREFIX = "semvar:"
 
-RecordingRequester = Driver | System | Problem | Solver
+RecordingRequester = Union[Driver, System, Problem, Solver]
 
 
 def _gen_abs_names_to_params(
     system: Group, abs_names: list[str]
-) -> tuple[str, Param | None]:
+) -> tuple[str, Optional[Param]]:
     sys_cache = {}
     for abs_name in abs_names:
         subsystem_path, local_name = abs_name.rsplit(".", 1)
