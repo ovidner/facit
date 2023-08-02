@@ -10,7 +10,7 @@ OPENMDAO_VERSIONS = [
 ]
 
 
-@nox.session(venv_backend="conda", python=PYTHON_VERSIONS)
+@nox.session(venv_backend="mamba", python=PYTHON_VERSIONS)
 @nox.parametrize("openmdao", OPENMDAO_VERSIONS)
 def tests(session, openmdao):
     # FIXME: Now we only use conda to install Python, and let pip do the
