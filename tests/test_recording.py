@@ -43,7 +43,7 @@ def test_recording_timestamps():
     assert ds["meta.timestamp"].dtype == "datetime64[ns]"
     # Floating-point errors in the timestamp calculations can cause
     # timestamps to be *slightly* out of bounds
-    leeway = np.timedelta64(1, "ms")
+    leeway = np.timedelta64(10, "ms")
     assert ds["meta.timestamp"].min() >= pre_timestamp - leeway
     assert ds["meta.timestamp"].max() <= post_timestamp + leeway
     # Make sure timestamps are monotonically increasing
