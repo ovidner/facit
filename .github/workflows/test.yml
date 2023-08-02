@@ -1,0 +1,31 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        # Include all history to get tags etc. for versioning
+        fetch-depth: 0
+    - uses: conda-incubator/setup-miniconda@v2
+      with:
+        channels: conda-forge
+        channel-priority: strict
+        miniforge-variant: Mambaforge
+        use-mamba: true
+    - run: mamba install nox
+    - run: nox
