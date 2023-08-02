@@ -3,7 +3,7 @@ from typing import Any, Optional
 import numpy as np
 import openmdao.api as om
 from openmdao.core.component import Component
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 NOT_SET = object()
 
@@ -68,8 +68,10 @@ def bool_space():
 
 class Param(BaseModel):
     name: str = Field(description="Unique name.")
-    label: Optional[str] = Field(description="Short, human-friendly name.")
-    desc: Optional[str] = Field(description="Longer description.")
+    label: Optional[str] = Field(
+        default=None, description="Short, human-friendly name."
+    )
+    desc: Optional[str] = Field(default=None, description="Longer description.")
 
     default: Optional[Any] = Field(default=None, description="Default value.")
     # I would rather call this "unit", but let's stick to OpenMDAO's convention
@@ -92,8 +94,7 @@ class Param(BaseModel):
         default=None, description="Parent parameter for overridden params."
     )
 
-    class Config:
-        allow_mutation = False
+    model_config = ConfigDict(frozen=True)
 
     def override(self, **kwargs):
         # TODO: warn if overriding the unit on a discrete param, as no
