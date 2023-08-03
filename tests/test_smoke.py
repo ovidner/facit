@@ -1,30 +1,16 @@
 import itertools
 
-import deepdiff
 import numpy as np
 import openmdao.api as om
 import pytest
-from xarray.testing import assert_equal
 
 import facit
 from facit import CASE_DIM, DatasetRecorder, pareto_subset
+from facit.testing import assert_ds_equal
 
 
 def nans(shape):
     return np.ones(shape) * np.nan
-
-
-def assert_ds_equal(a, b):
-    def _all_attrs(x):
-        return {name: var.attrs for name, var in x.variables.items()}
-
-    assert_equal(a, b)
-    assert not deepdiff.DeepDiff(a.attrs, b.attrs)
-    assert not deepdiff.DeepDiff(
-        _all_attrs(a),
-        _all_attrs(b),
-    )
-    assert a.variables.keys() == b.variables.keys()
 
 
 @pytest.mark.parametrize("weights", itertools.product((1.0, -1.0), repeat=3))
