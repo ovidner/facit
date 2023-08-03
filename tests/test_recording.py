@@ -47,4 +47,4 @@ def test_recording_timestamps():
     assert ds["meta.timestamp"].min() >= pre_timestamp - leeway
     assert ds["meta.timestamp"].max() <= post_timestamp + leeway
     # Make sure timestamps are monotonically increasing
-    assert (ds["meta.timestamp"].diff("design") > np.timedelta64(0, "ns")).all()
+    assert (ds["meta.timestamp"].diff(facit.CASE_DIM) > np.timedelta64(0, "ns")).all()

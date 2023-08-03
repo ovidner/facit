@@ -7,7 +7,7 @@ import pytest
 from xarray.testing import assert_equal
 
 import facit
-from facit import DESIGN_ID, DatasetRecorder, pareto_subset
+from facit import CASE_DIM, DatasetRecorder, pareto_subset
 
 
 def nans(shape):
@@ -77,11 +77,11 @@ def test_pareto_dataset(weights):
         prob.cleanup()
 
     ds = recorder.assemble_dataset(driver)
-    assert len(ds[DESIGN_ID]) == 7
+    assert len(ds[CASE_DIM]) == 7
 
     pareto_ds = pareto_subset(ds)
     assert pareto_ds is not ds
-    assert len(pareto_ds[DESIGN_ID]) == 3
+    assert len(pareto_ds[CASE_DIM]) == 3
     expected_pareto_set = -np.eye(3) * weights_arr
 
     # It is more convenient to simply look at the input vectors than the output

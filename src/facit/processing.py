@@ -1,7 +1,7 @@
 import numpy as np
 import xarray as xr
 
-from .constants import DESIGN_ID
+from .constants import CASE_DIM
 
 
 def _is_pareto_efficient(costs):
@@ -47,7 +47,7 @@ def objective_space(ds, scale=False):
         return objectives
 
     def _da(name, var, value):
-        assert var.dims[0] == DESIGN_ID
+        assert var.dims[0] == CASE_DIM
         val = np.broadcast_to(value, var.shape[1:])
 
         return xr.DataArray(name=name, data=val, dims=var.dims[1:])
@@ -122,7 +122,7 @@ def feasible_subset(ds):
 
         # Applies all() on all dimensions except DESIGN_ID
         ineq_feasibility_per_design = ineq_feasibility_per_constraint.groupby(
-            DESIGN_ID
+            CASE_DIM
         ).all(...)
 
         ds = ds.where(ineq_feasibility_per_design, drop=True)
@@ -132,17 +132,17 @@ def feasible_subset(ds):
 
 def pareto_subset(ds):
     # objectives = ds.filter_by_attrs(role=VariableRole.OBJECTIVE)
-    if len(ds[DESIGN_ID]) < 1:
+    if len(ds[CASE_DIM]) < 1:
         return ds
 
     scaled_objectives = (
         objective_space(ds, scale=True)
         .unstack()
-        .to_stacked_array("weights", sample_dims=[DESIGN_ID])
+        .to_stacked_array("weights", sample_dims=[CASE_DIM])
     )
 
     pareto_mask = xr.DataArray(
-        is_pareto_efficient(scaled_objectives.values), dims=[DESIGN_ID]
+        is_pareto_efficient(scaled_objectives.values), dims=[CASE_DIM]
     )
 
     return ds.where(pareto_mask, drop=True)
@@ -184,11 +184,11 @@ def constraint_violations(ds):
 
     # Applies sum() on all dimensions except DESIGN_ID
     ineq_feasibility_per_design = (
-        ineq_cv_per_constraint.to_array().groupby(DESIGN_ID).sum(...)
+        ineq_cv_per_constraint.to_array().groupby(CASE_DIM).sum(...)
     )
 
     # Arranges the array in the same order as the input
-    return ineq_feasibility_per_design.sel({DESIGN_ID: ds[DESIGN_ID]})
+    return ineq_feasibility_per_design.sel({CASE_DIM: ds[CASE_DIM]})
 
 
 def annotate_ds_with_constraint_violations(ds):

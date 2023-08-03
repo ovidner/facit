@@ -1,1 +1,1 @@
-DESIGN_ID = "design"
+CASE_DIM = "case"

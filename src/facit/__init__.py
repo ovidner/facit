@@ -1,5 +1,5 @@
 from .components import func_comp  # noqa
-from .constants import DESIGN_ID  # noqa
+from .constants import CASE_DIM  # noqa
 from .io import dump, dump_netcdf, dump_zarr, load, load_netcdf, load_zarr  # noqa
 from .modelling import (  # noqa
     EnumSpace,

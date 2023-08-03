@@ -15,7 +15,7 @@ from openmdao.core.system import System
 from openmdao.recorders.case_recorder import CaseRecorder
 from openmdao.solvers.solver import Solver
 
-from .constants import DESIGN_ID
+from .constants import CASE_DIM
 from .modelling import Param
 
 SEMVAR_PREFIX = "semvar:"
@@ -188,7 +188,7 @@ def make_data_vars(all_vars, all_meta, design_idx):
         else:
             extra_coords = {}
 
-        coords = {DESIGN_ID: design_idx, **extra_coords}
+        coords = {CASE_DIM: design_idx, **extra_coords}
         dims = list(coords.keys())
 
         yield ((name, (dims, val, meta)), coords.items())
@@ -234,7 +234,7 @@ class DatasetRecorder(CaseRecorder):
 
         # Pass on any non-default metadata
         meta_vars = {
-            f"meta.{key}": xr.DataArray([item], dims=[DESIGN_ID])
+            f"meta.{key}": xr.DataArray([item], dims=[CASE_DIM])
             for (key, item) in metadata.items()
             if key not in ["name", "success", "timestamp", "msg"]
         }
@@ -259,12 +259,12 @@ class DatasetRecorder(CaseRecorder):
             ds = xr.Dataset(
                 data_vars={
                     "meta.timestamp": xr.DataArray(
-                        [timestamp.to_numpy()], dims=[DESIGN_ID]
+                        [timestamp.to_numpy()], dims=[CASE_DIM]
                     ),
                     "meta.success": xr.DataArray(
-                        [bool(metadata["success"])], dims=[DESIGN_ID]
+                        [bool(metadata["success"])], dims=[CASE_DIM]
                     ),
-                    "meta.msg": xr.DataArray([metadata["msg"]], dims=[DESIGN_ID]),
+                    "meta.msg": xr.DataArray([metadata["msg"]], dims=[CASE_DIM]),
                     **meta_vars,
                     **data_vars,
                 },
@@ -309,7 +309,7 @@ class DatasetRecorder(CaseRecorder):
         pass
 
     def assemble_dataset(self, recording_requester):
-        ds = xr.concat(self.datasets[recording_requester], dim=DESIGN_ID)
+        ds = xr.concat(self.datasets[recording_requester], dim=CASE_DIM)
         # For the sake of consistency, convert the start timestamp to
         # NumPy datetime64
         ds.attrs["start_timestamp"] = self._start_timestamp[
