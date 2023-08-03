@@ -7,7 +7,7 @@ def _ds_variable_attrs(x):
 
 
 def assert_ds_meta_equal(a, b):
-    assert_equal(a, b)
+    assert a.dtypes == b.dtypes
     assert not deepdiff.DeepDiff(a.attrs, b.attrs)
     assert not deepdiff.DeepDiff(
         _ds_variable_attrs(a),
