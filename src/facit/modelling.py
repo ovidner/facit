@@ -1,7 +1,5 @@
 from typing import Any, Optional
 
-import numpy as np
-import openmdao.api as om
 from openmdao.core.component import Component
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -10,7 +8,8 @@ NOT_SET = object()
 
 class Space(BaseModel):
     """
-    Base class for representing a space of values. Don't use this directly.
+    Base class for representing a space of values. Don't use this
+    directly.
     """
 
     pass
@@ -26,7 +25,8 @@ class InnumSpace(Space):
 
 class EnumSpace(Space):
     """
-    A space of enumerable values, such as discrete numbers, strings or booleans.
+    A space of enumerable values, such as discrete numbers, strings or
+    booleans.
     """
 
     values: list[Any] = Field(default_factory=list)
