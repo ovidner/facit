@@ -125,9 +125,9 @@ def feasible_subset(ds):
             CASE_DIM
         ).all(...)
 
-        ds = ds.where(ineq_feasibility_per_design, drop=True)
+        filtered_ds = ds.where(ineq_feasibility_per_design, drop=True)
 
-    return ds
+    return filtered_ds.astype(ds.dtypes)
 
 
 def pareto_subset(ds):
@@ -145,7 +145,9 @@ def pareto_subset(ds):
         is_pareto_efficient(scaled_objectives.values), dims=[CASE_DIM]
     )
 
-    return ds.where(pareto_mask, drop=True)
+    filtered_ds = ds.where(pareto_mask, drop=True)
+
+    return filtered_ds.astype(ds.dtypes)
 
 
 def epsilonify(da: xr.DataArray, eps=np.finfo(float).eps) -> xr.DataArray:
