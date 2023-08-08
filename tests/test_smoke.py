@@ -6,7 +6,7 @@ import pytest
 
 import facit
 from facit import CASE_DIM, DatasetRecorder, pareto_subset
-from facit.testing import assert_ds_equal
+from facit.testing import assert_ds_equal, assert_ds_meta_equal
 
 
 def nans(shape):
@@ -67,6 +67,7 @@ def test_pareto_dataset(weights):
 
     pareto_ds = pareto_subset(ds)
     assert pareto_ds is not ds
+    assert_ds_meta_equal(pareto_ds, ds)
     assert len(pareto_ds[CASE_DIM]) == 3
     expected_pareto_set = -np.eye(3) * weights_arr
 
