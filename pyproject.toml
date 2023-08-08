@@ -22,7 +22,7 @@ dependencies = [
   "numpy",
   "pandas",
   "pydantic",
-  # "pygmo",  # Invalid package on PyPI, needs to be conda-installed :(
+  "pydoe2",
   "xarray",
   "zarr",
 ]
