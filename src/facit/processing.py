@@ -90,7 +90,7 @@ def constraint_space(ds):
     return ds.filter_by_attrs(type=lambda x: x and "constraint" in x)
 
 
-def feasible_subset(ds):
+def feasible_subset(ds: xr.Dataset):
     constraints = constraint_space(ds)
     eq_constraints = constraints.filter_by_attrs(
         type=lambda x: x and x["constraint"]["equals"] is not None
@@ -99,8 +99,16 @@ def feasible_subset(ds):
         type=lambda x: x and x["constraint"]["equals"] is None
     )
 
+    filters = []
+
     if eq_constraints:
-        raise NotImplementedError("Equality constraints are not supported yet")
+        equals_ds = xr.Dataset(
+            {
+                name: var.attrs["type"]["constraint"]["equals"]
+                for (name, var) in eq_constraints.items()
+            }
+        )
+        filters.append(eq_constraints == equals_ds)
 
     if ineq_constraints:
         lower_bound_ds = xr.Dataset(
@@ -115,17 +123,17 @@ def feasible_subset(ds):
                 for (name, var) in ineq_constraints.items()
             }
         )
+        filters.append(
+            np.logical_and(
+                ineq_constraints >= lower_bound_ds, ineq_constraints <= upper_bound_ds
+            )
+        )
 
-        ineq_feasibility_per_constraint = np.logical_and(
-            ineq_constraints >= lower_bound_ds, ineq_constraints <= upper_bound_ds
-        ).to_array()
+    # Applies all() on all dimensions except CASE_DIM and gives us a
+    # boolean array, by CASE_DIM
+    feasibility_per_case = xr.merge(filters).to_array().groupby(CASE_DIM).all(...)
 
-        # Applies all() on all dimensions except DESIGN_ID
-        ineq_feasibility_per_design = ineq_feasibility_per_constraint.groupby(
-            CASE_DIM
-        ).all(...)
-
-        filtered_ds = ds.where(ineq_feasibility_per_design, drop=True)
+    filtered_ds = ds.where(feasibility_per_case, drop=True)
 
     return filtered_ds.astype(ds.dtypes)
 
